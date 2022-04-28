@@ -17,6 +17,9 @@ mapper = {
 }
 
 
+DIRECTORY_PATH = os.path.dirname(os.path.abspath(__file__))[:-4]
+
+
 class P2PDataset(Dataset):
     def __init__(self, tokenizer, data):
         super().__init__()
@@ -54,9 +57,8 @@ class P2PDataset(Dataset):
 
 
 def infer():
-    directory_path = os.path.abspath(os.fspath('kaggle-usp2pmatching'))
-    model_path = directory_path + config.MODEL_PATH['bert_for_patents']
-    input_path = directory_path + config.INPUT_FOLDER_PATH
+    model_path = DIRECTORY_PATH + config.MODEL_PATH['bert_for_patents']
+    input_path = DIRECTORY_PATH + config.INPUT_FOLDER_PATH
 
     tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
     model = AutoModelForSequenceClassification.from_pretrained(model_path, local_files_only=True)
@@ -90,6 +92,6 @@ def infer():
 
 if __name__ == "__main__":
     y_preds = infer()
-    sample_submission = pd.read_csv(os.path.abspath(os.fspath('kaggle-usp2pmatching/input/sample_submission.csv'))
-    print(sample_submission)
+    sample_submission = pd.read_csv(DIRECTORY_PATH + '/input/sample_submission.csv')
     sample_submission.score = y_preds
+    # sample_submission.to_csv('sample_submission', index=False)
