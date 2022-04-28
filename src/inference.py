@@ -1,3 +1,4 @@
+import os
 import torch
 import pandas as pd
 import config
@@ -53,8 +54,9 @@ class P2PDataset(Dataset):
 
 
 def infer():
-    model_path = config.MODEL_PATH['bert_for_patents']
-    input_path = config.INPUT_FOLDER_PATH
+    directory_path = os.path.abspath(os.fspath('kaggle-usp2pmatching'))
+    model_path = directory_path + config.MODEL_PATH['bert_for_patents']
+    input_path = directory_path + config.INPUT_FOLDER_PATH
 
     tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True)
     model = AutoModelForSequenceClassification.from_pretrained(model_path, local_files_only=True)
@@ -88,6 +90,6 @@ def infer():
 
 if __name__ == "__main__":
     y_preds = infer()
-    sample_submission = pd.read_csv('/Users/Nester/Documents/Career Management/github/US Patent Phrase to Phrase Matching/kaggle-usp2pmatching/input/sample_submission.csv')
+    sample_submission = pd.read_csv(os.path.abspath(os.fspath('kaggle-usp2pmatching/input/sample_submission.csv'))
     print(sample_submission)
     sample_submission.score = y_preds
